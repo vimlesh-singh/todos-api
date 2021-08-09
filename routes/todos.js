@@ -28,4 +28,21 @@ router.post("/", async function (req, res, next) {
   }
 });
 
+router.put("/", async function (req, res, next) {
+  try {
+    const id =
+      req.body.id || req.body.id.toString().trim()
+        ? req.body.id.toString().trim()
+        : "";
+    if (!id) return res.status(403).send(`Error updating task`);
+    if (id === "") return res.status(403).send(`Error updating task`);
+    const found = todos.findIndex(t => t.id === Number(id));
+    if (found < 0) return res.status(403).send(`Error updating task`);
+    todos[found].isCompleted = !todos[found].isCompleted;
+    res.status(201).send(todos);
+  } catch (error) {
+    console.log(req.body, error);
+    res.status(500).send(error);
+  }
+});
 module.exports = router;
